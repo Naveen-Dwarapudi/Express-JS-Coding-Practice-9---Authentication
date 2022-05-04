@@ -12,6 +12,7 @@ app.use(express.json());
 
 let database = null;
 
+//Initializing Db And Server
 const initializeDbAndServer = async () => {
   try {
     database = await open({
@@ -30,10 +31,12 @@ const initializeDbAndServer = async () => {
 
 initializeDbAndServer();
 
+//Checking Password Length
 const validatePassword = (password) => {
   return password.length > 4;
 };
 
+//Creating new User
 app.post("/register", async (request, response) => {
   const { username, name, password, gender, location } = request.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -65,6 +68,7 @@ app.post("/register", async (request, response) => {
   }
 });
 
+//Logging in if credintials matched
 app.post("/login", async (request, response) => {
   const { username, password } = request.body;
   const selectUserQuery = `SELECT * FROM user WHERE username = '${username}';`;
@@ -87,6 +91,7 @@ app.post("/login", async (request, response) => {
   }
 });
 
+//Updating old Password with new password
 app.put("/change-password", async (request, response) => {
   const { username, oldPassword, newPassword } = request.body;
   const selectUserQuery = `SELECT * FROM user WHERE username = '${username}';`;
